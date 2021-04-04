@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
 const MongoClient = require('mongodb').MongoClient;
+const ObjectID = require('mongodb').ObjectID;
 const cors = require('cors');
 const bodyParser = require('body-parser');
 require('dotenv').config()
@@ -19,6 +20,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 client.connect(err => {
     console.log('connection error:', err);
     const productCollection = client.db("eCommerceDB").collection("products");
+    const orderCollection = client.db("eCommerceDB").collection("orderProduct");
 
     // product added in database
     app.post('/addProduct', (req, res) => {
@@ -37,6 +39,16 @@ client.connect(err => {
             .toArray((err, products) => {
                 res.send(products)
                 console.log('from database', products)
+            })
+    })
+
+    // display buy product from database in checkout
+    app.get('/product/:id', (req, res) => {
+        const id = ObjectID(req.params.id);
+        productCollection.find({_id: id})
+            .toArray((err, product) => {
+                res.send(product[0])
+                // console.log('from database', product[0])
             })
     })
 });
