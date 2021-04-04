@@ -45,12 +45,24 @@ client.connect(err => {
     // display buy product from database in checkout
     app.get('/product/:id', (req, res) => {
         const id = ObjectID(req.params.id);
-        productCollection.find({_id: id})
+        productCollection.find({ _id: id })
             .toArray((err, product) => {
                 res.send(product[0])
                 // console.log('from database', product[0])
             })
     })
+
+    // send checkOut product information in database
+    app.post('/addOrder', (req, res) => {
+        const newOrder = req.body;
+        orderCollection.insertOne(newOrder)
+            .then(result => {
+                // console.log(result)
+                res.send(result.insertedCount > 0);
+            })
+        console.log(newOrder);
+    })
+
 });
 
 app.listen(port, () => {
