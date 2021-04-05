@@ -63,6 +63,15 @@ client.connect(err => {
         console.log(newOrder);
     })
 
+    // display ordered products in Orders component for specific user
+    app.get('/orders', (req, res) => {
+        // console.log(req.query.email);
+        orderCollection.find({email: req.query.email})
+            .toArray((err, result) => {
+                res.send(result);
+            })
+    })
+
 });
 
 app.listen(port, () => {
