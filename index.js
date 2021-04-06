@@ -72,6 +72,13 @@ client.connect(err => {
             })
     })
 
+    // delete product from database in manageProduct
+    app.delete('/deleteProduct/:id', (req, res) => {
+        const id = ObjectID(req.params.id);
+        console.log('delete this', id);
+        productCollection.findOneAndDelete({_id: id})
+        .then(items => res.send(!!items.value))
+    })
 });
 
 app.listen(port, () => {
